@@ -1,6 +1,6 @@
 import HomeContainer from "./component/HomeContainer";
 import React, {useState, useEffect} from "react";
-import {Card, Button} from 'react-bootstrap'
+import {Card, Button, Spinner} from 'react-bootstrap'
 import io from "socket.io-client";
 
 let socket;
@@ -13,6 +13,7 @@ function App() {
     const [typing, setTyping] = useState('')
     const [listMessage, setListMessage] = useState('')
     const [display, SetDisplay] = useState(false)
+    const [loading, SetLoading] = useState(false)
     useEffect(() => {
         socket = io(CONNECTION_PORT);
     }, [CONNECTION_PORT]);
@@ -37,6 +38,7 @@ function App() {
     });
 
     const connectToRoom = () => {
+        SetLoading(true)
         let data = {
             roomId: roomId,
             name: name
@@ -58,7 +60,7 @@ function App() {
 
     return (
         <div className="App col-md-6 mx-auto mt-5">
-            {!display&&<Card className="text-center">
+            {!display && <Card className="text-center">
                 <Card.Header>Chat App</Card.Header>
                 <Card.Body>
 
@@ -69,10 +71,33 @@ function App() {
                                onChange={(e) => setName(e.target.value)}/>
 
                     </Card.Text>
-                    <Button variant="primary" onClick={connectToRoom}>Join Room</Button>
+                    <Button variant="primary" onClick={connectToRoom}>
+                        {loading ?
+                            <>
+                                     <span className="">
+                               Joining  Room  ....
+                                </span>
+                                <Spinner
+                                    className={"ml-3"}
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                />
+
+                            </>
+                            : <span className="ml-4">
+                        Join Room
+                        </span>}
+
+
+                    </Button>
 
                 </Card.Body>
-                <Card.Footer className="text-muted">2 days ago</Card.Footer>
+                <Card.Footer className="text-muted">&#9829;
+                    2 Day Ago
+                </Card.Footer>
             </Card>}
 
             {display &&
