@@ -54,12 +54,14 @@ const HomeContainer = ({roomId, socket, listMessage, name, typing}) => {
         setMsgInputValue("");
         inputRef.current.focus();
     };
-    const onTyping = () => {
-        let data = {
-            name: name,
-            roomId: roomId
+    const onTyping = (e) => {
+        if (e.key !== 'Enter') {
+            let data = {
+                name: name,
+                roomId: roomId
+            }
+            socket.emit("typing", data)
         }
-        socket.emit("typing", data)
     }
 
 
@@ -81,7 +83,7 @@ const HomeContainer = ({roomId, socket, listMessage, name, typing}) => {
             <MessageList scrollBehavior="smooth" typingIndicator={typing && <TypingIndicator content={typing}/>}>
                 {messages.map((m, i) => <Message key={i} model={m}/>)}
             </MessageList>
-            <MessageInput placeholder="Type message here" onSend={handleSend} onKeyUp={onTyping}
+            <MessageInput placeholder="Type message here" onSend={handleSend} onKeyUp={(e)=>onTyping(e)}
                           onChange={setMsgInputValue}
                           value={msgInputValue} ref={inputRef}/>
         </ChatContainer>
