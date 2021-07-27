@@ -107,7 +107,7 @@ function App() {
 
                 </Card.Body>
                 <Card.Footer className="text-muted">&#9829;
-                    Created By Usman
+                    Developed By Usman
                 </Card.Footer>
             </Card>}
 
