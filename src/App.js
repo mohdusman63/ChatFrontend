@@ -76,9 +76,9 @@ function App() {
                 <Card.Body>
 
                     <Card.Text>
-                        <input type="number" className="form-control" placeholder="Enter Room Id " value={roomId}
+                        <input type="number"  required className="form-control" placeholder="Enter Room Id " value={roomId}
                                onChange={(e) => setRoomId(e.target.value)}/>
-                        <input type="text" className="form-control mt-3" placeholder="Enter Name" value={name}
+                        <input type="text" required  className="form-control mt-3" placeholder="Enter Name" value={name}
                                onChange={(e) => setName(e.target.value)}/>
 
                     </Card.Text>
@@ -107,7 +107,7 @@ function App() {
 
                 </Card.Body>
                 <Card.Footer className="text-muted">&#9829;
-                    2 Day Ago
+                    Created By Usman
                 </Card.Footer>
             </Card>}
 
