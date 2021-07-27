@@ -2,9 +2,11 @@ import HomeContainer from "./component/HomeContainer";
 import React, {useState, useEffect} from "react";
 import {Card, Button, Spinner} from 'react-bootstrap'
 import io from "socket.io-client";
+import logo from './chat.png'
 
 let socket;
- const CONNECTION_PORT = "https://immense-island-25591.herokuapp.com";
+const CONNECTION_PORT = "https://immense-island-25591.herokuapp.com";
+
 //const CONNECTION_PORT = "http://localhost:3001";
 
 function App() {
@@ -15,7 +17,8 @@ function App() {
     const [listMessage, setListMessage] = useState('')
     const [display, SetDisplay] = useState(false)
     const [loading, SetLoading] = useState(false)
-    const [joinedRoom,setJoinedRoom] = useState("");
+    const [joinedRoom, setJoinedRoom] = useState("");
+    const [error, SetError] = useState(null)
 
     useEffect(() => {
         socket = io(CONNECTION_PORT);
@@ -24,7 +27,7 @@ function App() {
     useEffect(() => {
         socket.on("joined_room", (msg) => {
             //console.log('rece'+msg)
-            let message=`${msg}  Joined The Room`
+            let message = `${msg}  Joined The Room`
             setJoinedRoom(message)
         });
     });
@@ -48,6 +51,10 @@ function App() {
     });
 
     const connectToRoom = () => {
+        if(! roomId || !name ){
+            SetError('Input Field Required')
+            return
+        }
         SetLoading(true)
         let data = {
             roomId: roomId,
@@ -72,14 +79,16 @@ function App() {
     return (
         <div className="App col-md-6 mx-auto mt-5">
             {!display && <Card className="text-center">
-                <Card.Header>Chat App</Card.Header>
+                <Card.Header className="bg-success"><img src={logo} width={30}/></Card.Header>
                 <Card.Body>
 
                     <Card.Text>
-                        <input type="number"  required className="form-control" placeholder="Enter Room Id " value={roomId}
+                        <input type="number" className="form-control" placeholder="Enter Room Id " value={roomId}
                                onChange={(e) => setRoomId(e.target.value)}/>
-                        <input type="text" required  className="form-control mt-3" placeholder="Enter Name" value={name}
+                        <input type="text" className="form-control mt-3" placeholder="Enter Name" value={name}
                                onChange={(e) => setName(e.target.value)}/>
+
+                        {error&&<div className="text-danger">{error}</div>}
 
                     </Card.Text>
                     <Button variant="primary" onClick={connectToRoom}>
@@ -106,13 +115,14 @@ function App() {
                     </Button>
 
                 </Card.Body>
-                <Card.Footer className="text-muted">&#9829;
+                <Card.Footer className="text-muted bg-dark">&#9829;
                     Developed By Usman
                 </Card.Footer>
             </Card>}
 
             {display &&
-            <HomeContainer roomId={roomId} socket={socket} listMessage={listMessage} name={name} typing={typing} joinedRoom={joinedRoom}/>}
+            <HomeContainer roomId={roomId} socket={socket} listMessage={listMessage} name={name} typing={typing}
+                           joinedRoom={joinedRoom}/>}
 
         </div>
     );
