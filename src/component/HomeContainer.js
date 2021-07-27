@@ -97,7 +97,10 @@ const HomeContainer = ({roomId, socket, listMessage, name, typing, joinedRoom}) 
                 {messages.map((m, i) => {
                     if (m.type === 'message')
                         return <Message key={"message-" + i} model={m.data}/>
-                    else return <MessageSeparator content={m.data} as="h2" key={"seperator-" + i}/>
+                    else {
+                        if(m.data)
+                        return <MessageSeparator content={m.data} as="h2" key={"seperator-" + i}/>
+                    }
                 })}
 
             </MessageList>
