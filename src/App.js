@@ -4,7 +4,8 @@ import {Card, Button, Spinner} from 'react-bootstrap'
 import io from "socket.io-client";
 
 let socket;
-const CONNECTION_PORT = "https://immense-island-25591.herokuapp.com";
+ const CONNECTION_PORT = "https://immense-island-25591.herokuapp.com";
+//const CONNECTION_PORT = "http://localhost:3001";
 
 function App() {
     const [roomId, setRoomId] = useState('')
@@ -14,10 +15,19 @@ function App() {
     const [listMessage, setListMessage] = useState('')
     const [display, SetDisplay] = useState(false)
     const [loading, SetLoading] = useState(false)
+    const [joinedRoom,setJoinedRoom] = useState("");
+
     useEffect(() => {
         socket = io(CONNECTION_PORT);
     }, [CONNECTION_PORT]);
 
+    useEffect(() => {
+        socket.on("joined_room", (msg) => {
+            //console.log('rece'+msg)
+            let message=`${msg}  Joined The Room`
+            setJoinedRoom(message)
+        });
+    });
     useEffect(() => {
         socket.on("receive_message", (msg) => {
             //console.log('rece'+msg)
@@ -45,6 +55,7 @@ function App() {
         }
         socket.emit("join_room", data, (req) => {
             console.log(req)
+
             SetDisplay(true)
         });
     };
@@ -101,7 +112,7 @@ function App() {
             </Card>}
 
             {display &&
-            <HomeContainer roomId={roomId} socket={socket} listMessage={listMessage} name={name} typing={typing}/>}
+            <HomeContainer roomId={roomId} socket={socket} listMessage={listMessage} name={name} typing={typing} joinedRoom={joinedRoom}/>}
 
         </div>
     );
