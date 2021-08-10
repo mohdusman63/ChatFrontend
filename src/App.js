@@ -4,11 +4,12 @@ import {Card, Button, Spinner} from 'react-bootstrap'
 import io from "socket.io-client";
 import logo from './chat.png'
 
+
 let socket;
-const CONNECTION_PORT = "https://immense-island-25591.herokuapp.com";
+let token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzbWFuQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJGJPTnJhVi9YNk85dWxqbkNUaWlZdHU5TkQzSFN1Vk9hNnIyeDkvUVN6Ri51bUVuR0dTOVBlIiwiZmFjZWJvb2tfaWQiOiIiLCJuYW1lIjoiIiwicGhvbmUiOm51bGwsImlzX3Byb2ZpbGVfY3JlYXRlZCI6ZmFsc2UsImdvb2dsZV9pZCI6IiIsImxpbmtlZGluX2lkIjoiIiwiaXNfYWNjb3VudF92ZXJpZnkiOmZhbHNlLCJzdGF0dXMiOmZhbHNlLCJsYXN0X2xvZ2luIjoiMjAyMS0wOC0wNlQwODo1MzowMS43NDVaIiwiaXNfY29tcGFueV9jcmVhdGVkIjpmYWxzZSwiX2lkIjoiNjEwY2Y4ZjQxNzk3NjYzOTI4M2MyZTU5IiwiYWNjb3VudF90eXBlIjoiam9iX3NlZWtlciIsInNpZ251cF9tZXRob2QiOiJsb2NhbCIsImNyZWF0ZWRBdCI6IjIwMjEtMDgtMDZUMDg6NTU6MTYuNDE5WiIsInVwZGF0ZWRBdCI6IjIwMjEtMDgtMDZUMDg6NTU6MTYuNDE5WiIsIl9fdiI6MCwiaWF0IjoxNjI4MjQwMTE2LCJleHAiOjE2MjkxMDQxMTZ9.PQGZpH-uFKIc7hnWcwgWgGBlbrF6r6gvtiyOIYdyGFY"
+//const CONNECTION_PORT = "https://immense-island-25591.herokuapp.com";
 
-//const CONNECTION_PORT = "http://localhost:3001";
-
+const CONNECTION_PORT = "http://localhost:3001";
 function App() {
     const [roomId, setRoomId] = useState('')
     const [name, setName] = useState('')
@@ -21,7 +22,8 @@ function App() {
     const [error, SetError] = useState(null)
 
     useEffect(() => {
-        socket = io(CONNECTION_PORT);
+        socket =  io.connect(CONNECTION_PORT,{query: {token: token}});
+
     }, [CONNECTION_PORT]);
 
     useEffect(() => {
@@ -30,15 +32,24 @@ function App() {
             let message = `${msg}  Joined The Room`
             setJoinedRoom(message)
         });
-    });
+    },[socket]);
+
+    useEffect(() => {
+        socket.on("connect_error", (err) => {
+            console.log(err instanceof Error); // true
+            console.log(err.message); // not authorized
+
+        });
+
+    },[socket])
     useEffect(() => {
         socket.on("receive_message", (msg) => {
             //console.log('rece'+msg)
             setListMessage(msg)
         });
-    });
+    },[socket]);
 
-    useEffect(() => {
+    if(socket) {
         socket.on("typing", (msg) => {
             setTyping(msg)
             console.log('typing' + msg)
@@ -48,7 +59,8 @@ function App() {
             setTyping('')
 
         }, 4000)
-    });
+    }
+
 
     const connectToRoom = () => {
         if(! roomId || !name ){
@@ -62,10 +74,14 @@ function App() {
         }
         socket.emit("join_room", data, (req) => {
             console.log(req)
-
             SetDisplay(true)
         });
     };
+    if(socket) {
+        socket.on("disconnect", () => {
+            console.log(socket.id); // undefined
+        });
+    }
     const sendMessage = () => {
         let data = {
             message: message,
@@ -93,18 +109,16 @@ function App() {
                     </Card.Text>
                     <Button variant="primary" onClick={connectToRoom}>
                         {loading ?
-                            <>
-                                     <span className="">
-                               Joining  Room  ....
-                                </span>
+                            <>  <Button variant="primary"  disabled>
                                 <Spinner
-                                    className={"ml-3"}
                                     as="span"
                                     animation="border"
                                     size="sm"
                                     role="status"
                                     aria-hidden="true"
                                 />
+                                Loading...
+                            </Button>
 
                             </>
                             : <span className="ml-4">
