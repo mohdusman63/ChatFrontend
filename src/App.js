@@ -7,9 +7,9 @@ import logo from './chat.png'
 
 let socket;
 let token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzbWFuQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJGJPTnJhVi9YNk85dWxqbkNUaWlZdHU5TkQzSFN1Vk9hNnIyeDkvUVN6Ri51bUVuR0dTOVBlIiwiZmFjZWJvb2tfaWQiOiIiLCJuYW1lIjoiIiwicGhvbmUiOm51bGwsImlzX3Byb2ZpbGVfY3JlYXRlZCI6ZmFsc2UsImdvb2dsZV9pZCI6IiIsImxpbmtlZGluX2lkIjoiIiwiaXNfYWNjb3VudF92ZXJpZnkiOmZhbHNlLCJzdGF0dXMiOmZhbHNlLCJsYXN0X2xvZ2luIjoiMjAyMS0wOC0wNlQwODo1MzowMS43NDVaIiwiaXNfY29tcGFueV9jcmVhdGVkIjpmYWxzZSwiX2lkIjoiNjEwY2Y4ZjQxNzk3NjYzOTI4M2MyZTU5IiwiYWNjb3VudF90eXBlIjoiam9iX3NlZWtlciIsInNpZ251cF9tZXRob2QiOiJsb2NhbCIsImNyZWF0ZWRBdCI6IjIwMjEtMDgtMDZUMDg6NTU6MTYuNDE5WiIsInVwZGF0ZWRBdCI6IjIwMjEtMDgtMDZUMDg6NTU6MTYuNDE5WiIsIl9fdiI6MCwiaWF0IjoxNjI4MjQwMTE2LCJleHAiOjE2MjkxMDQxMTZ9.PQGZpH-uFKIc7hnWcwgWgGBlbrF6r6gvtiyOIYdyGFY"
-//const CONNECTION_PORT = "https://immense-island-25591.herokuapp.com";
+const CONNECTION_PORT = "https://immense-island-25591.herokuapp.com";
 
-const CONNECTION_PORT = "http://localhost:3001";
+//const CONNECTION_PORT = "http://localhost:3001";
 function App() {
     const [roomId, setRoomId] = useState('')
     const [name, setName] = useState('')
